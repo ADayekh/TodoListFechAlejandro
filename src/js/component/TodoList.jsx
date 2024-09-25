@@ -7,31 +7,63 @@ const Todos_List = () => {
 
 	const [task, setTask] = useState([]);
 	const [value, setValue] = useState("");
+	const user = "aledayekh"
 
-	const taskinHTML = task.map ((singleTask, i) => {
+	const taskinHTML = task.map((singletask) => {
 		return (
 		<div className="row">
 			<div className="col-10">
-				<div className ="postask" key={i}>{singleTask}</div>
+				<div className ="postask" key={singletask.id}>{singletask.label}</div>
 			</div>
-			<div className ="col-2 pt-3"> <button onClick={() => deletetask(i)} className="Button_Remove"><FontAwesomeIcon className ="icon" icon={faXmark} style={{color: "#ff0000"}}/>
+			<div className ="col-2 pt-3"> <button onClick={() => deletetask(singletask.id)} className="Button_Remove"><FontAwesomeIcon className ="icon" icon={faXmark} style={{color: "#ff0000"}}/>
 			</button></div>
 		</div>)
 	})
 
-	const deletetask = (index) => {
-		const newTask = task.filter((_, i) => i !== index)
-		setTask (newTask)
+	const deletetask = (id) => {
+		const newTask = task.filter((task) => task.id !== id);
+		Delete_todos(id);
+		setTask (newTask);
 	}
 
 	const KeyDown = (event) => {
 			if (event.key == "Enter") {
-				const newTask =  ([...task, value]);
-				setTask(newTask);
+				const newTask =  {label: value, is_done: false};
+				setTask([...task, newTask]);
 				setValue("");
+				Post_todos(user, newTask);
+
 		}
 	}
 	
+	const Get_todos = (user) => {
+		fetch(`https://playground.4geeks.com/todo/users/${user}`, {method: "GET" , headers:{"Content-Type": "application/json"}}).then((response) => response.json()).then((data) => {
+			setTask(data.todos);
+			console.log (data)
+		})
+	}
+
+	const Post_todos = (user, body) => {
+		fetch(`https://playground.4geeks.com/todo/todos/${user}`, {
+			method: "POST", 
+			body: JSON.stringify(body),
+			headers:{"Content-Type": "application/json"}
+		}).then((response) => response.json()).then((data) => {
+			console.log (data);
+		})
+	}
+
+	const Delete_todos = (id) => {
+		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+			method: "DELETE", 
+			headers:{"Content-Type": "application/json"}
+		})
+	}
+
+	useEffect (() => {
+		Get_todos(user)
+	}, [])
+
 	return (
 		<div className="text-center pb-5">
 			<h1 id="title" className="text-center mt-5">todos</h1>

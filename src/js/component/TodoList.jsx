@@ -9,11 +9,11 @@ const Todos_List = () => {
 	const [value, setValue] = useState("");
 	const user = "aledayekh"
 
-	const taskinHTML = task.map((singletask) => {
+	const taskinHTML = task.map((singletask, index) => {
 		return (
-		<div className="row">
+		<div className="row" key={index}>
 			<div className="col-10">
-				<div className ="postask" key={singletask.id}>{singletask.label}</div>
+				<div className ="postask">{singletask.label}</div>
 			</div>
 			<div className ="col-2 pt-3"> <button onClick={() => deletetask(singletask.id)} className="Button_Remove"><FontAwesomeIcon className ="icon" icon={faXmark} style={{color: "#ff0000"}}/>
 			</button></div>
@@ -21,9 +21,9 @@ const Todos_List = () => {
 	})
 
 	const deletetask = (id) => {
-		const newTask = task.filter((task) => task.id !== id);
+		//const newTask = task.filter((task) => task.id !== id);
 		Delete_todos(id);
-		setTask (newTask);
+		//setTask (newTask);
 	}
 
 	const KeyDown = (event) => {
@@ -57,7 +57,10 @@ const Todos_List = () => {
 		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
 			method: "DELETE", 
 			headers:{"Content-Type": "application/json"}
-		})
+		}).then((response) => {const newTask = task.filter((task) => task.id !== id);
+			setTask (newTask);
+		}
+	)
 	}
 
 	useEffect (() => {

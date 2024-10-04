@@ -21,9 +21,9 @@ const Todos_List = () => {
 	})
 
 	const deletetask = (id) => {
-		//const newTask = task.filter((task) => task.id !== id);
+		const newTask = task.filter((task) => task.id !== id);
 		Delete_todos(id);
-		//setTask (newTask);
+		setTask (newTask);
 	}
 
 	const KeyDown = (event) => {
@@ -57,10 +57,7 @@ const Todos_List = () => {
 		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
 			method: "DELETE", 
 			headers:{"Content-Type": "application/json"}
-		}).then((response) => {const newTask = task.filter((task) => task.id !== id);
-			setTask (newTask);
-		}
-	)
+		}) 
 	}
 
 	useEffect (() => {
